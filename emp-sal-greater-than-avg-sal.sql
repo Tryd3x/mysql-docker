@@ -20,7 +20,7 @@ WITH
             s.emp_no
     )
 SELECT
-    COUNT(*)
+    *
 FROM
     total_emp_salary_ tes 
     JOIN avg_salary_all_employees asae
