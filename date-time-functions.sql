@@ -80,3 +80,35 @@ SELECT TIMESTAMPDIFF(MONTH, '2023-09-20', '2024-09-20');
 SELECT ADDDATE('2017-01-13', '2017-01-03');
 -- Add two time
 SELECT ADDTIME('10:40:32.88558', '06:04:01.222222');
+
+WITH
+    student_subject_pair AS (
+        SELECT DISTINCT
+            *
+        FROM
+            students stu, subjects sub
+    ),
+    attendees AS (
+        SELECT DISTINCT
+            ssp.student_id,
+            ssp.subject_name,
+            COUNT(e.student_id) as attended_exams
+        FROM
+            student_subject_pair ssp
+            LEFT JOIN examinations e 
+                ON ssp.student_id = e.student_id
+                AND ssp.subject_name = e.subject_name
+        GROUP BY
+            ssp.student_id,
+            ssp.subject_name
+    )
+SELECT
+    s.student_id,
+    s.student_name,
+    a.subject_name,
+    a.attended_exams
+FROM
+    students s JOIN attendees a ON s.student_id = a.student_id
+ORDER BY
+    s.student_id,
+    a.subject_name
